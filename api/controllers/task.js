@@ -1,6 +1,10 @@
 const { StatusCodes } = require('http-status-codes');
 
 const Task = require('../models/Task');
+const { 
+    BadRequestError,
+    NotFoundError
+} = require('../errors/index');
 
 const getAllTasks = async (req, res) => {
     try {
@@ -24,45 +28,39 @@ const createTask = async (req, res) => {
 }
 
 const getSingleTask = async (req, res) => {
-    try {
-        const { id:taskID } = req.params;
-        const task = await Task.findOne({ _id: taskID });
-        if(!task) {
-            return res.status(StatusCodes.NOT_FOUND).json({msg: `No task with id: ${taskID}`})
-        }
-        res.status(StatusCodes.OK).json(task)
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: error})
+    const { id:taskID } = req.params;
+    const task = await Task.findOne({ _id: taskID });
+    if(!task) {
+        throw new NotFoundError(`No task with id: ${taskID}`)
     }
+    res.status(StatusCodes.OK).json(task)
 }
 
 const updateTask = async (req, res) => {
-    try {
-        const { id:taskID } = req.params;
-        const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
-            new: true,
-            runValidators: true
-        })
-        res.status(StatusCodes.OK).json(task)
-        if(!task) {
-            return res.status(StatusCodes.NOT_FOUND).json({msg: `No task with id: ${taskID}`})
-        }
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: error})
+    const { id:taskID } = req.params;
+    const { reminder, completed } = req.body
+    if(reminder === undefined && completed === undefined){
+        throw new BadRequestError('Must update your task')
     }
+    console.log(reminder, completed)
+    // const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
+    //     new: true,
+    //     runValidators: true
+    // })
+    // if (req.body)
+    // if(!task) {
+    //     throw new NotFoundError(`No task found with id: ${taskID}`)
+    // }
+    // res.status(StatusCodes.OK).json(task)
 }
 
 const deleteTask = async (req, res) => {
-    try {
-        const { id:taskID } = req.params;
-        const task = await Task.findOneAndDelete({_id: taskID});
-        if(!task){
-            return res.status(StatusCodes.NOT_FOUND).json({msg: `No task found with id: ${taskID}`})
-        }
-        res.status(StatusCodes.OK).json({msg: `Succesfully deleted task with id: ${taskID}`})
-    } catch (error) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({msg: error})
+    const { id:taskID } = req.params;
+    const task = await Task.findOneAndDelete({_id: taskID});
+    if(!task){
+        throw new NotFoundError(`No task found with id: ${taskID}`)
     }
+    res.status(StatusCodes.OK).json({msg: `Succesfully deleted task with id: ${taskID}`})
 }
 
 module.exports = { 
