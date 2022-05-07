@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
+import Tasks from './components/Tasks'
 
 function App() {
-	const [tasks, setTasks] = useState();
+	const [tasks, setTasks] = useState([]);
 
 	useEffect(() => {
 		const getTasks = async () => {
@@ -17,11 +18,17 @@ function App() {
 		const res = await fetch('http://localhost:5000/api/v1/tasks');
 		const data = await res.json();
 		
-		return data;
+		return data
 	};
 
 	return (
-		<div><h1>Hello</h1></div>
+		<div>
+			{ tasks.length > 0 ? (
+				<Tasks tasks={tasks} />
+			): (
+				"No tasks to show"
+			)}
+		</div>
 	);
 }
 
