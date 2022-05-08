@@ -42,16 +42,16 @@ const updateTask = async (req, res) => {
     if(reminder === undefined && completed === undefined){
         throw new BadRequestError('Must update your task')
     }
-    console.log(reminder, completed)
-    // const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
-    //     new: true,
-    //     runValidators: true
-    // })
-    // if (req.body)
-    // if(!task) {
-    //     throw new NotFoundError(`No task found with id: ${taskID}`)
-    // }
-    // res.status(StatusCodes.OK).json(task)
+    
+    const task = await Task.findOneAndUpdate({ _id: taskID }, req.body, {
+        new: true,
+        runValidators: true
+    })
+    if (req.body)
+    if(!task) {
+        throw new NotFoundError(`No task found with id: ${taskID}`)
+    }
+    res.status(StatusCodes.OK).json(task)
 }
 
 const deleteTask = async (req, res) => {
