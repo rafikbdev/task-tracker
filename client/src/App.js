@@ -22,7 +22,7 @@ function App() {
 	};
 
 	return (
-		<div>
+		<div className="container">
 			{ tasks.length > 0 ? (
 				<Tasks tasks={tasks} />
 			): (
