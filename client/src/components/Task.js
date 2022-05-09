@@ -6,7 +6,7 @@ const Task = ({ task, onToggleReminder }) => {
             className={`task ${task.reminder ? 'reminder' : ''}`} 
             onDoubleClick={() => onToggleReminder(task._id)}
         >
-            <h3>{task.task}</h3>
+            <h3 className={task.completed ? 'completed' : ''}>{task.task}</h3>
         </div>
     )
 }

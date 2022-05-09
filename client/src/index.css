@@ -71,6 +71,12 @@ body {
   justify-content: space-between;
 }
 
+.task .completed {
+  text-decoration: line-through;
+  color: #b3b3b3;
+  font-style: italic;
+}
+
 .add-form {
   margin-bottom: 40px;
 }
