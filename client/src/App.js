@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import Header from './components/Header'
+import AddTask from './components/AddTask'
 import Tasks from './components/Tasks'
+
 
 function App() {
 	const [tasks, setTasks] = useState([]);
+	const [showAddTask, setShowAddTask] = useState(false);
 
 	useEffect(() => {
 		const getTasks = async () => {
@@ -26,6 +30,22 @@ function App() {
 		const data = await res.json();
 		return data
 	};
+
+	const addTask = async (task) => {
+		const res = await fetch('http://localhost:5000/api/v1/tasks', {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(task)
+		})
+
+		const data = await res.json();
+		console.log(data)
+		const newTask = { ...data };
+		const newTasks = [...tasks, newTask];
+		setTasks(newTasks)
+	}
 
 	const deleteTask = async (id) => {
 		const res = await fetch(`http://localhost:5000/api/v1/tasks/${id}`, {
@@ -88,6 +108,11 @@ function App() {
 
 	return (
 		<div className="container">
+			<Header 
+				onAdd={() => setShowAddTask(!showAddTask)}
+				showAdd={showAddTask}
+			/>
+			{ showAddTask ? <AddTask onAdd={addTask} /> : ''}
 			{ tasks.length > 0 ? (
 				<Tasks 
 					tasks={tasks} 
