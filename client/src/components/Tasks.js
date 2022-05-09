@@ -1,7 +1,7 @@
 import React from 'react'
 import Task from './Task'
 
-const Tasks = ({ tasks, onToggleReminder }) => {
+const Tasks = ({ tasks, onToggleReminder, onToggleCompleted }) => {
     return ( 
         <>
             {tasks.map((task) => (
@@ -9,6 +9,7 @@ const Tasks = ({ tasks, onToggleReminder }) => {
                     key={task._id}
                     task={task}
                     onToggleReminder={onToggleReminder}
+                    onToggleCompleted={onToggleCompleted}
                 />
             ))}
         </>

@@ -41,10 +41,33 @@ function App() {
 		
 		const data = await res.json();
 
-		console.log(data)
-
 		setTasks(tasks.map((task) => 
 			task._id === id ? { ...task, reminder: data.reminder } 
+			: task
+		))
+	}
+
+	const toggleCompleted = async (id) => {
+		const taskToToggle = await fetchTask(id);
+		let upDatedTask = {};
+		upDatedTask = { ...taskToToggle, completed: !taskToToggle.completed }
+
+		if(upDatedTask.completed === true){
+			upDatedTask.reminder = false;
+		}
+
+		const res = await fetch(`http://localhost:5000/api/v1/tasks/${id}`, {
+			method: 'PATCH',
+			headers: { 
+				'Content-type': 'application/json'
+			},
+			body: JSON.stringify(upDatedTask)
+		})
+
+		const data = await res.json()
+
+		setTasks(tasks.map((task) =>
+			task._id === id ? { ...task, completed: data.completed }
 			: task
 		))
 	}
@@ -54,7 +77,8 @@ function App() {
 			{ tasks.length > 0 ? (
 				<Tasks 
 					tasks={tasks} 
-					onToggleReminder={toggleReminder}	
+					onToggleReminder={toggleReminder}
+					onToggleCompleted={toggleCompleted}	
 				/>
 			): (
 				"No tasks to show"
