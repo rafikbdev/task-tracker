@@ -67,7 +67,7 @@ function App() {
 		const data = await res.json()
 
 		setTasks(tasks.map((task) =>
-			task._id === id ? { ...task, completed: data.completed }
+			task._id === id ? { ...task, completed: data.completed, reminder: data.reminder }
 			: task
 		))
 	}
