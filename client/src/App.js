@@ -27,6 +27,20 @@ function App() {
 		return data
 	};
 
+	const deleteTask = async (id) => {
+		const res = await fetch(`http://localhost:5000/api/v1/tasks/${id}`, {
+			method: 'DELETE',
+			headers: { 
+				'Content-type': 'application/json'
+			}
+		});
+
+		const data = await res.json()
+		console.log(data)
+		
+		setTasks(tasks.filter((task) => task._id !== id ))
+	}
+
 	const toggleReminder = async (id) => {
 		const taskToToggle = await fetchTask(id);
 		const upDatedTask = { ...taskToToggle, reminder: !taskToToggle.reminder }
@@ -78,7 +92,8 @@ function App() {
 				<Tasks 
 					tasks={tasks} 
 					onToggleReminder={toggleReminder}
-					onToggleCompleted={toggleCompleted}	
+					onToggleCompleted={toggleCompleted}
+					onDelete={deleteTask}
 				/>
 			): (
 				"No tasks to show"
